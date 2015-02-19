@@ -1,14 +1,14 @@
+//salida_campo javascript
+
 function inicio(){
+var access=L.mapbox.accessToken = 'pk.eyJ1Ijoic291dGhtYXBwaW5nIiwiYSI6IkdsNWJpUzQifQ.wGioWqTZt28vefHwFu1hQA';
 
-var map=L.map('map').setView([36.853, -2.438],13);
+var map=L.mapbox.map('map','southmapping.l8dfiplm');
 
-var sat= L.tileLayer(
-	'https://{s}.tiles.mapbox.com/v3/southmapping.k1egc4nh/{z}/{x}/{y}.png',
-	{//attribution:'<a href="http://www.southmapping.com">Southmapping.com</a></br>&copy; <a href="http://www.mapbox.com">MapBox</a> &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+map.locate({setView: false, maxZoom: 16});
 
+////////////////////////////////LOCATION SETTINGS////////////////////////////////////////////
 
-map.locate({setView: true, maxZoom: 16});
 function onLocationFound(e) {
     var radius = e.accuracy / 2;
 
@@ -25,4 +25,20 @@ function onLocationError(e) {
 }
 
 map.on('locationerror', onLocationError);
+
+////////////////////////////////END LOCATION SETTINGS////////////////////////////////////////
+
+//POPUP FUNCTION
+function creaPopup(feature, layer) {
+	if (feature.properties && feature.properties.name){
+	layer.bindPopup("<center><h1>"+feature.properties.name+"</h1><a href="+feature.properties.img_url+" data-lightbox=salida><img src="+feature.properties.img_url+" height=200px width=300px></a></center>",
+	{minWidth:350, className:"custom-popup"});
+}};
+//DATA
+var estilo_ruta={"color":"#a3e46b", "weight":8, "opacity":0.8};
+
+var ruta=L.geoJson(path, {style:estilo_ruta}).addTo(map);
+var puntos=L.geoJson(points,{onEachFeature:creaPopup}).addTo(map);
+
+//END INICIO()
 }
